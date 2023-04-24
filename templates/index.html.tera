@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rift7</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="tools">Tools</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="hero container">
+            <h1>Welcome to Web Tools Collection</h1>
+            <p>A collection of web-based tools for your daily tasks.</p>
+            <a href="tools" class="cta">Explore Tools</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Rift7. All rights reserved.</p>
+    </footer>
+</body>
+</html>
