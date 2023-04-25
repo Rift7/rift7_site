@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitFlipFinder</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        function resizeInput(input) {
+            const outputTable = document.getElementById("bit-flip-output");
+            input.style.width = 'auto';
+            input.style.width = (input.scrollWidth + 10) + 'px';
+            outputTable.style.width = input.style.width;
+        }
+
+        function isDomainCharValid(c) {
+            const code = c.charCodeAt(0);
+            return (code >= 48 && code <= 57) || // 0-9
+                (code >= 65 && code <= 90) || // A-Z
+                (code >= 97 && code <= 122) || // a-z
+                (code === 45); // hyphen (-)
+        }
+
+        function isSameCharDifferentCase(a, b) {
+            return a.toLowerCase() === b.toLowerCase() && a !== b;
+        }
+
+        function generateBitFlippedDomains() {
+            const input = document.getElementById("domain-input").value.toLowerCase();
+            const output = document.getElementById("bit-flip-output");
+            const flippedUrls = new Set();
+
+            const urlParts = input.split(/([\/.])/);
+            const flipPositions = urlParts.map((part, index) => {
+                const isDomainPart = index % 2 === 0;
+                const isAfterFirstDot = urlParts.slice(0, index).some(p => p === '.');
+                const isBeforeFirstSlash = !urlParts.slice(0, index).some(p => p === '/');
+                return isDomainPart && (!isAfterFirstDot || !isBeforeFirstSlash);
+            });
+
+            for (let i = 0; i < urlParts.length; i++) {
+                if (!flipPositions[i]) continue;
+
+                const part = urlParts[i];
+                for (let j = 0; j < part.length; j++) {
+                    if (part[j] === '.') continue; // Ignore '.' characters
+
+                    for (let k = 0; k < 8; k++) {
+                        const charCode = part.charCodeAt(j);
+                        const flippedCharCode = charCode ^ (1 << k);
+                        const flippedChar = String.fromCharCode(flippedCharCode);
+
+                        if (isDomainCharValid(flippedChar) && !isSameCharDifferentCase(part[j], flippedChar)) {
+                            const flippedPart = part.slice(0, j) + flippedChar + part.slice(j + 1);
+                            const flippedUrlParts = [...urlParts];
+                            flippedUrlParts[i] = flippedPart;
+                            const flippedUrl = flippedUrlParts.join("");
+                            flippedUrls.add(flippedUrl);
+                        }
+                    }
+                }
+            }
+
+            const outputTable = document.getElementById("bit-flip-output");
+            outputTable.innerHTML = "";
+
+            Array.from(flippedUrls).forEach(flippedUrl => {
+                const row = outputTable.insertRow();
+                const cell = row.insertCell();
+                const link = document.createElement("a");
+                link.href = "http://" + flippedUrl;
+                link.target = "_blank";
+                link.innerText = flippedUrl;
+                cell.appendChild(link);
+            });
+        }
+
+        function toggleDescription() {
+            const description = document.getElementById("long-description");
+            const arrow = document.getElementById("arrow");
+
+            description.classList.toggle("hidden");
+            arrow.classList.toggle("arrow-up");
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="tools">Tools</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="container">
+            <h1>BitFlipFinder</h1>
+            <h3>Unleash the power of bit manipulation and explore the depths of the digital realm, one bit at a time.</h3>
+            <div class="teal-line"></div>
+            <div class="arrow" id="arrow" onclick="toggleDescription()"></div>
+            <div class="long-description hidden" id="long-description">
+                <p>BitFlipFinder is designed for intrepid security researchers, helping them uncover hidden gems in the vast domain name space. With its state-of-the-art bit-flipping algorithms, you'll be amazed by the fascinating new domains just waiting to be discovered. Who knew that one tiny flip could open up a whole new world of opportunities?</p>
+                <br>
+                <p>But, of course, with great power comes great responsibility. While we've created BitFlipFinder to serve the forces of good, we can't help but wonder what chaos it might unleash in the hands of... "creative" individuals. Wink, wink. Remember, folks - always use your bit-flipping powers for good, not evil! So, gear up and let BitFlipFinder guide you through the mysterious, sometimes hilarious, and occasionally dangerous world of bit-flipped domain names.</p>
+                <div class="teal-line"></div>
+            </div>
+            <div class="input-output-container">
+                <input type="text" id="domain-input" class="input-box" oninput="generateBitFlippedDomains(); resizeInput(this);" placeholder="Enter domain or path">
+                <table id="bit-flip-output" class="output-table"></table>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Rift7. All rights reserved.</p>
+    </footer>
+</body>
+</html>
