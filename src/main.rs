@@ -18,6 +18,12 @@ fn tools() -> Template {
     Template::render("tools", &context)
 }
 
+#[get("/bitflipfinder")]
+fn bitflipfinder() -> Template {
+    let context: HashMap<String, String> = HashMap::new();
+    Template::render("bitflipfinder", &context)
+}
+
 #[get("/static/<file..>", rank = 2)]
 async fn static_files(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("static/").join(file)).await.ok()
@@ -26,7 +32,7 @@ async fn static_files(file: PathBuf) -> Option<NamedFile> {
 fn rocket() -> rocket::Rocket<rocket::Build> {
     rocket::build()
         .attach(Template::fairing())
-        .mount("/", routes![index, tools, static_files])
+        .mount("/", routes![index, tools, bitflipfinder, static_files])
 }
 
 #[rocket::main]
