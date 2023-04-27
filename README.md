@@ -8,8 +8,8 @@ To get started with the Rift7 site locally, follow these steps:
 
 Clone the repository and cd:
 ```bash
-git clone https://github.com/yourusername/rift7.git
-cd rift7
+git clone https://github.com/Rift7/rift7_site.git
+cd rift7_site
 ```
 Make sure you have Rust installed. If not, you can install it by following the instructions at https://www.rust-lang.org/tools/install.
 Set the Rust version to nightly:
